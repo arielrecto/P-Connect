@@ -1,0 +1,79 @@
+<div class="w-1/6 min-h-screen flex flex-col border-r border-gray-300">
+    <div class="flex flex-col gap-2 border-b border-gray-300 p-4 font-bold">
+        <a href="/">
+            <h1 class="flex items-center hover:bg-gray-200 hover:rounded-lg duration-700 p-2 space-x-5 text-gray-800">
+                <i class="fi fi-rr-house-chimney pt-1"></i>
+                <span>Home</span>
+            </h1>
+         </a>
+            <h1 class="flex items-center hover:bg-gray-200 hover:rounded-lg duration-700 p-2 space-x-5 text-gray-800">
+                <i class="fi fi-rr-arrow-trend-up pt-1"></i>
+                <span>Trending</span>
+            </h1>
+       
+    </div>
+    <div class="flex flex-col gap-2 border-b border-gray-300 p-4 font-bold" x-data="{toggle : true}">
+        <h1
+            class="flex items-center hover:bg-gray-200 hover:rounded-lg duration-700 p-2 space-x-5 text-gray-800 justify-between">
+            <span>TOPICS</span>
+            <span @click="toggle = ! toggle">
+
+                <template x-if="!toggle">
+                    <i class="fi fi-rr-angle-small-down"></i>
+                </template>
+
+                <template x-if="toggle">
+                    <i class="fi fi-rr-angle-small-up"></i>
+                </template>
+
+            </span>
+        </h1>
+        <div class="flex flex-col gap-2" x-show="toggle" x-transition.duration.700 x-cloak>
+
+            <h1 class="flex items-center hover:bg-gray-200 hover:rounded-lg duration-700 p-2 space-x-5 text-gray-800">
+                <i class="fi fi-rr-basketball"></i>
+                <span>Sports</span>
+            </h1>
+            <h1 class="flex items-center hover:bg-gray-200 hover:rounded-lg duration-700 p-2 space-x-5 text-gray-800">
+                <i class="fi fi-rr-screen"></i>
+                <span>Anime</span>
+            </h1>
+            <h1 class="flex items-center hover:bg-gray-200 hover:rounded-lg duration-700 p-2 space-x-5 text-gray-800">
+                <i class="fi fi-rr-radio"></i>
+                <span>News</span>
+            </h1>
+        </div>
+    </div>
+    <div class="flex flex-col gap-2 border-b border-gray-300 p-4 font-bold" x-data="{toggle : true}">
+        <h1
+            class="flex items-center hover:bg-gray-200 hover:rounded-lg duration-700 p-2 space-x-5 text-gray-800 justify-between">
+            <span>RESOURCES</span>
+            <span @click="toggle = ! toggle">
+
+                <template x-if="!toggle">
+                    <i class="fi fi-rr-angle-small-down"></i>
+                </template>
+
+                <template x-if="toggle">
+                    <i class="fi fi-rr-angle-small-up"></i>
+                </template>
+
+            </span>
+        </h1>
+        <div class="flex flex-col gap-2" x-show="toggle" x-transition.duration.700 x-cloak>
+
+            <h1 class="flex items-center hover:bg-gray-200 hover:rounded-lg duration-700 p-2 space-x-5 text-gray-800">
+                <i class="fi fi-rr-data-transfer"></i>
+                <span>About P-connect</span>
+            </h1>
+            <h1 class="flex items-center hover:bg-gray-200 hover:rounded-lg duration-700 p-2 space-x-5 text-gray-800">
+                <i class="fi fi-rr-users-alt"></i>
+                <span>Communities</span>
+            </h1>
+            <h1 class="flex items-center hover:bg-gray-200 hover:rounded-lg duration-700 p-2 space-x-5 text-gray-800">
+                <i class="fi fi-rr-blog-pencil"></i>
+                <span>Blog</span>
+            </h1>
+        </div>
+    </div>
+</div>
