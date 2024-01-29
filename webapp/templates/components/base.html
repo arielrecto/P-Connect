@@ -60,18 +60,11 @@
 <body>
 
     <div class="min-h-screen w-full bg-gray-100 flex flex-col">
-        {% include 'components/navbar.html' %}
-        <div class="flex justify-center h-full w-full">
-            <div class="w-5/6 h-full flex">
-                {% include 'components/sidebar.html' %}
-
-                <div class="w-5/6">
-                    {% block content %}
-                    {% endblock %}
-                </div>
-
-            </div>
-        </div>
+        
+        {% block content %}
+          
+        {% endblock content %}
+          
     </div>
 
     <!-- swiper js -->

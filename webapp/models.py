@@ -24,7 +24,7 @@ class Profile(models.Model):
         return self.last_name
     
 class Category(models.Model):
-    name = models.CharField(max_length=55)
+    name = models.CharField(max_length=55, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -33,7 +33,8 @@ class Category(models.Model):
 
     
 class Group (models.Model):
-    name = models.CharField(max_length=55)
+    image = models.FileField(upload_to='media/group/image', null=True)
+    name = models.CharField(max_length=55, null=True)
     description = models.TextField(max_length=255)
     owner = models.ForeignKey(User, db_column="owner_id", related_name="owner", on_delete=models.CASCADE)
     users = models.ManyToManyField(User, blank=True)
@@ -48,8 +49,8 @@ class Group (models.Model):
 
 
 class Post(models.Model):
-    title = models.CharField(max_length=50)
-    content = models.TextField(max_length=255)
+    title = models.CharField(max_length=50, null=True)
+    content = models.TextField(max_length=255, null=True)
     media = models.FileField(upload_to="post_media", blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)

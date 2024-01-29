@@ -1,0 +1,32 @@
+{% extends 'components/base.html' %}
+
+
+
+
+{% block title %}
+
+
+{% block auth_title %}
+
+{% endblock auth_title %}
+
+
+{% endblock title %}
+
+
+
+{% block content %}
+
+{% include 'components/navbar.html' %}
+<div class="min-h-screen flex justify-center items-center">
+
+    {% block auth_content %}
+
+    {% endblock auth_content %}
+
+</div>
+
+
+
+
+{% endblock content %}
