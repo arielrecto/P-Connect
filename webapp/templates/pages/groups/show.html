@@ -1,0 +1,77 @@
+{% extends 'components/home/base.html' %}
+
+
+
+{% block home_title %}
+Group {{ group.name}}
+{% endblock home_title %}
+
+
+
+
+
+{% block home_content %}
+<div class="flex flex-col gap-2 min-h-screen w-full max-h-auto">
+    <div class="p-5 flex items-center w-full border-b border-gray-300">
+        <h1 class="text-3xl font-bold text-orange-500">
+            p/{{group.name}}
+        </h1>
+    </div>
+    <div class="flex gap-5 items-center h-auto">
+        <div class="flex flex-col gap-2 p-5 items-center">
+            <img src="https://robohash.org/{{request.user.username}}" alt="" srcset=""
+                class="h-16 w-16 object object-center rounded-full">
+            <p class="text-sm">{{request.user.username}}</p>
+        </div>
+        <div class="w-full h-auto bg-gray-200 p-2 rounded-lg" x-data="{toggle : false}">
+            <div class="flex items-center justify-end">
+                <button @click="toggle = !toggle"  class="btn btn-xs bg-orange-500 border-none text-white">
+                    <span>Add Post</span>
+                </button>
+            </div>
+            <form x-show="toggle" action="{% url 'group_show' group.id %}" method="post" class="flex flex-col gap-2 w-full h-auto" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{postForm}}
+                <button class="btn btn-sm bg-orange-500 border-none text-white">Add Post</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="flex flex-col gap-2 h-auto w-full p-5">
+
+
+        {% for post in posts %}
+        <div class="w-full min-h-96 rounded-lg p-2 flex flex-col gap-2 bg-white rounded-lg">
+            <div class="w-full border-b border-gray-300 flex justify-between">
+                <div class="flex flex-col gap-2 items-center">
+                    <img src="https://robohash.org/{{post.user.username}}" alt="" srcset=""
+                        class="h-10 w-10 object object-center">
+                    <p class="text-xs text-gray-600">{{post.user.username}} </p>
+                </div>
+                <div class="flex items-center">
+                    <h1 class="text-3xl text-gray-600 capitalize"> {{post.title}}</h1>
+                </div>
+                <div>
+
+                </div>
+            </div>
+
+
+
+            {% if post.image %}
+                <img src="{{post.image.url}}" alt="" srcset="" class="w-full h-auto object object-center">
+            {% endif %}
+
+
+
+            <div class="min-h-64 bg-gray-100 rounded-lg p-2">
+                {{post.content}}
+            </div>
+        </div>
+
+        {% endfor %}
+
+
+    </div>
+</div>
+{% endblock home_content %}

@@ -19,9 +19,6 @@ Home
                 {% for group in groups %}
 
                 <div class="swiper-slide relative">
-
-
-
                     <img src="{{group.image.url}}" alt="">
                     <div class="absolute z-10 bottom-0 backdrop-blur-sm bg-gray-600/30 w-full p-2 text-white">
                         <h1 class="font-bold text-xl">{{ group.name }}</h1>
@@ -41,9 +38,9 @@ Home
     <div class="flex flex-col gap-2 w-full bg-gray-50 rounded-lg p-5" x-data="{toggle: false}">
         <div class="flex items-center justify-end">
             <div class="flex items-center gap-2">
-                <button class="btn btn-secondary btn-xs">
+                <a href="{% url 'group_index' %}" class="btn btn-secondary btn-xs">
                     <span>Groups</span>
-                </button>
+                </a>
                 <button @click="toggle = !toggle"
                     class="btn btn-xs bg-orange-500 hover:bg-orange-600 border-none text-white">
                     <span>Add Group</span>

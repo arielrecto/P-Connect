@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .forms import *
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from .decorators import *
 
 
 # Create your views here.
@@ -56,6 +57,48 @@ def add_group(request):
         return redirect(to="home")
     return render(request, 'home.html', {'groupForm' : groupForm})
 
+@login_required(login_url='login')
+def group_index(request):
+    groups = Group.objects.order_by('created_at')
+    context = {
+        'groups' : groups
+    }
+    
+    return render(request, 'pages/groups/index.html', context)
+
+@login_required(login_url='login')
+@group_required
+def group_show(request, groupID):
+    group = Group.objects.get(id=groupID)
+    posts = Post.objects.filter(group=group).order_by('-created_at')
+    
+
+    
+    postForm = PostForm(initial={
+        'user' : request.user,
+        'group' : group
+    })
+    context = {
+        'group' : group,
+        'postForm': postForm,
+        'posts' : posts
+    }
+    
+    if request.method == 'POST':
+        postForm = PostForm(request.POST, request.FILES)
+        if postForm.is_valid():
+            postForm.save()
+            return redirect(to="group_show", groupID=group.id)
+        
+        context = {
+        'group' : group,
+        'postForm': postForm,
+        'posts' : posts
+        }
+    
+        return render(request, 'pages/groups/show.html', context)
+    
+    return render(request, 'pages/groups/show.html', context)
 
 @login_required(login_url='login')
 def sign_out(request):

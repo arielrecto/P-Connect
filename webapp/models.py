@@ -51,9 +51,11 @@ class Group (models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=50, null=True)
     content = models.TextField(max_length=255, null=True)
-    media = models.FileField(upload_to="post_media", blank=True)
+    image = models.FileField(upload_to="media/post_media", blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True) 
     
     
     def __str__(self):
