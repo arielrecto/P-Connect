@@ -19,7 +19,10 @@ Home
                 {% for group in groups %}
 
                 <div class="swiper-slide relative">
-                    <img src="{{group.image.url}}" alt="">
+                    <a href="{% url 'group_show' group.id %}">
+                        <img src="{{group.image.url}}" alt="">
+                    </a>
+                    
                     <div class="absolute z-10 bottom-0 backdrop-blur-sm bg-gray-600/30 w-full p-2 text-white">
                         <h1 class="font-bold text-xl">{{ group.name }}</h1>
                         <p class="text-sm">{{ group.description }}</p>
@@ -63,18 +66,31 @@ Home
 
     <div class="w-full flex gap-2">
         <div class="w-5/6 h-full flex flex-col gap-2">
+
+
+
+
+            {% for post in posts %}
+
             <div class="w-full p-2 rounded-lg bg-gray-50">
 
                 <div class="flex items-center py-2 justify-between">
-                    <a href="/threads/show/1">
+                    <a href="{% url 'thread_show' post.id %}">
                         <h1 class="flex items-center text-gray-500 p-2 gap-2">
-                            <img src="https://robohash.org/arielrecto"
+                            <img src="https://robohash.org/{{post.user.username}}"
                                 class="object rounded-full h-10 w-10 object-center border-2"> <span
-                                class="text-sm">p/Sportmedia - 1min</span>
+                                class="text-sm">p/{{post.group.name}} ({{post.user.username}}) -
+                                {{post.created_at|timesince}} </span>
                         </h1>
                     </a>
                     <div class="flex gap-2 item-center">
+
+
+                        {% if not post.user.group.id == request.user.group.id%}
                         <button class="p-2 rounded-lg text-xs bg-orange-500 text-white">join</button>
+                        {% endif %}
+
+
                         <span class="relative p-2" x-data="{toggle :false}">
                             <i class="fi fi-rr-menu-dots" @click="toggle = !toggle"></i>
 
@@ -98,107 +114,37 @@ Home
                     </div>
                 </div>
 
-                <h1 class="text-3xl font-bold gap-2 py-2 truncate">Sprort media has sample title in this post !</h1>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/9/92/Youth-soccer-indiana.jpg" alt=""
-                    clas="object object-center h-96 w-full">
+                <h1 class="text-3xl font-bold gap-2 py-2 truncate">{{post.title}}</h1>
+                
+                {% if post.image %}
+                <img src="{{post.image.url}}" alt=""
+                class="object object-center h-auto w-full object-cover">     
+                {% endif %}
+                    
+               
             </div>
 
+            {% endfor %}
 
-            <div class="w-full p-2 rounded-lg bg-gray-50">
-
-                <div class="flex items-center py-2 justify-between">
-                    <a href="/threads/show/1">
-                        <h1 class="flex items-center text-gray-500 p-2 gap-2">
-                            <img src="https://robohash.org/ph-cat-health"
-                                class="object rounded-full h-10 w-10 object-center border-2"> <span
-                                class="text-sm">p/petHealthCare - 1h</span>
-                        </h1>
-                    </a>
-                    <div class="flex gap-2 item-center">
-                        <button class="p-2 rounded-lg text-xs bg-orange-500 text-white">join</button>
-                        <span class="relative p-2" x-data="{toggle :false}">
-                            <i class="fi fi-rr-menu-dots" @click="toggle = !toggle"></i>
-
-                            <div class="flex flex-col gap-2 absolute z-10 -bottom-20 -right-22 bg-white shadow-sm text-sm rounded-lg"
-                                x-show="toggle" x-transition.duration.700 @click.outside="toggle = !toggle" x-cloak>
-                                <a href="#" class="flex items-center gap-2 p-2">
-                                    <i class="fi fi-rr-social-network"></i>
-                                    <h1 class="capitalize">
-                                        like
-                                    </h1>
-                                </a>
-                                <a href="#" class="flex gap-2 items-center p-2">
-
-                                    <i class="fi fi-rr-flag-alt"></i>
-                                    <h1 class="capitalize">
-                                        report
-                                    </h1>
-                                </a>
-                            </div>
-                        </span>
-                    </div>
-                </div>
-
-                <h1 class="text-3xl font-bold gap-2 py-2 truncate">Philippines pet Association has sample title in this
-                    post !</h1>
-                <img src="data:image/jpeg;base64,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"
-                    alt="" clas="object object-center h-96 w-full">
-            </div>
-
-
-
-            <div class="w-full p-2 rounded-lg bg-gray-50">
-                <div class="flex items-center py-2 justify-between">
-                    <h1 class="flex items-center text-gray-500 p-2 gap-2">
-                        <img src="https://robohash.org/arielrecto"
-                            class="object rounded-full h-10 w-10 object-center border-2"> <span
-                            class="text-sm">p/Sportmedia - 1min</span>
-                    </h1>
-                    <div class="flex gap-2 item-center">
-                        <button class="p-2 rounded-lg text-xs bg-orange-500 text-white">join</button>
-                        <span class="relative p-2" x-data="{toggle :false}">
-                            <i class="fi fi-rr-menu-dots" @click="toggle = !toggle"></i>
-
-                            <div class="flex flex-col gap-2 absolute z-10 -bottom-20 -right-22 bg-white shadow-sm text-sm rounded-lg"
-                                x-show="toggle" x-transition.duration.700 @click.outside="toggle = !toggle">
-                                <a href="#" class="flex items-center gap-2 p-2">
-                                    <i class="fi fi-rr-social-network"></i>
-                                    <h1 class="capitalize">
-                                        like
-                                    </h1>
-                                </a>
-                                <a href="#" class="flex gap-2 items-center p-2">
-
-                                    <i class="fi fi-rr-flag-alt"></i>
-                                    <h1 class="capitalize">
-                                        report
-                                    </h1>
-                                </a>
-                            </div>
-                        </span>
-                    </div>
-                </div>
-                <h1 class="text-3xl font-bold gap-2 py-2">Sprort media has sample title in this post !</h1>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/9/92/Youth-soccer-indiana.jpg" alt=""
-                    clas="object object-center h-96 w-full">
-            </div>
         </div>
         <div class="bg-gray-100 rounded-lg h-96 w-72 flex flex-col gap-2 p-4">
             <h1 class="text-lg font-bold gap-2 text-gray-800">Popular P-group</h1>
 
-            
+
             {% for group in groups %}
-            
-            <div class="rounded-lg hover:bg-gray-300 duration-700 flex items-center gap-2 p-2">
-                <img src="https://robohash.org/{{group.name}}" class="object rounded-full h-10 w-10 object-center">
-                <div>
-                    <h1 class="text-sm text-gray-800">p/{{group.name}}</h1>
-                    <p class="text-xs">12k p-member</p>
+            <a href="{% url 'group_show' group.id %}">
+                <div class="rounded-lg hover:bg-gray-300 duration-700 flex items-center gap-2 p-2">
+                    <img src="https://robohash.org/{{group.name}}" class="object rounded-full h-10 w-10 object-center">
+                    <div>
+                        <h1 class="text-sm text-gray-800">p/{{group.name}}</h1>
+                        <p class="text-xs">12k p-member</p>
+                    </div>
                 </div>
-            </div>
+            </a>
+           
 
             {% endfor %}
-                
+
         </div>
     </div>
 

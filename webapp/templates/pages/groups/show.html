@@ -25,11 +25,12 @@ Group {{ group.name}}
         </div>
         <div class="w-full h-auto bg-gray-200 p-2 rounded-lg" x-data="{toggle : false}">
             <div class="flex items-center justify-end">
-                <button @click="toggle = !toggle"  class="btn btn-xs bg-orange-500 border-none text-white">
+                <button @click="toggle = !toggle" class="btn btn-xs bg-orange-500 border-none text-white">
                     <span>Add Post</span>
                 </button>
             </div>
-            <form x-show="toggle" action="{% url 'group_show' group.id %}" method="post" class="flex flex-col gap-2 w-full h-auto" enctype="multipart/form-data">
+            <form x-show="toggle" action="{% url 'group_show' group.id %}" method="post"
+                class="flex flex-col gap-2 w-full h-auto" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{postForm}}
                 <button class="btn btn-sm bg-orange-500 border-none text-white">Add Post</button>
@@ -46,10 +47,13 @@ Group {{ group.name}}
                 <div class="flex flex-col gap-2 items-center">
                     <img src="https://robohash.org/{{post.user.username}}" alt="" srcset=""
                         class="h-10 w-10 object object-center">
+
                     <p class="text-xs text-gray-600">{{post.user.username}} </p>
                 </div>
                 <div class="flex items-center">
-                    <h1 class="text-3xl text-gray-600 capitalize"> {{post.title}}</h1>
+                    <a href="{% url 'thread_show' post.id %}">
+                        <h1 class="text-3xl text-gray-600 capitalize"> {{post.title}}</h1>
+                    </a>
                 </div>
                 <div>
 
@@ -59,7 +63,7 @@ Group {{ group.name}}
 
 
             {% if post.image %}
-                <img src="{{post.image.url}}" alt="" srcset="" class="w-full h-auto object object-center">
+            <img src="{{post.image.url}}" alt="" srcset="" class="w-full h-auto object object-center">
             {% endif %}
 
 

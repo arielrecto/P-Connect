@@ -12,12 +12,11 @@
 
 {% block auth_content %}
 
-<form action="{% url 'login' %}" method="POST" class="w-1/4 h-auto flex flex-col gap-2 bg-white p-2 rounded-lg p-5">
+<form action="{% url 'register' %}" method="POST" class="w-1/4 h-auto flex flex-col gap-2 bg-white p-2 rounded-lg p-5">
     {% csrf_token %}
-    <h1 class="text-orange-500 text-3xl font-bold">Login</h1>
-    {{ loginForm}}
+    <h1 class="text-orange-500 text-3xl font-bold">Register</h1>
+    {{ registerForm}}
     <button class="btn bg-orange-500 hover:bg-orange-600 text-white border-none">Login</button>
-    <a href="{% url 'register' %}" class="text-xs underline">Create Account</a>
 </form>
    
 {% endblock auth_content %}

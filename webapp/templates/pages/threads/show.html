@@ -1,46 +1,120 @@
-{% extends './../../components/base.html' %}
+{% extends 'components/home/base.html' %}
 
 
-{% block title %}
-Thread
-{% endblock title %}
+{% block home_title %}
+Thread {{ post.title }}
+{% endblock home_title %}
 
 
 
 
-{% block content %}
+{% block home_content %}
 <div class="w-full p-4 overflow-y-hidden">
     <div class="w-full p-2 rounded-lg bg-gray-50">
 
         <div class="flex items-center py-2 justify-between">
-            <a href="/threads/show/1">
-                <h1 class="flex items-center text-gray-500 p-2 gap-2">
-                    <img src="https://robohash.org/arielrecto"
-                        class="object rounded-full h-10 w-10 object-center border-2"> <span class="text-sm">p/Sportmedia
-                        - 1min</span>
-                </h1>
-            </a>
+            <h1 class="flex items-center text-gray-500 p-2 gap-2">
+                <img src="https://robohash.org/{{post.user.username}}"
+                    class="object rounded-full h-10 w-10 object-center border-2"> <span class="text-sm">
+                    <a href="{% url 'group_show' post.group.id %}">
+                        p/{{post.group.name}}
+                    </a> ({{post.user.username}})
+                    - {{post.created_at|timesince}}</span>
+            </h1>
+
         </div>
 
-        <h1 class="text-3xl font-bold gap-2 py-2 truncate">Sprort media has sample title in this post !</h1>
-        <a class="venobox" href="https://upload.wikimedia.org/wikipedia/commons/9/92/Youth-soccer-indiana.jpg">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/9/92/Youth-soccer-indiana.jpg" alt=""
-            clas="object object-center h-96 w-full">
+        <h1 class="text-3xl font-bold gap-2 py-2 truncate">{{post.title}}</h1>
+
+
+        {% if post.image %}
+        <a class="venobox" href="{{post.image.url}}">
+            <img src="{{post.image.url}}" alt="" clas="object object-center h-96 w-full">
         </a>
 
+        {% endif %}
+
+
         <p class="whitespace-pre-line">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque dapibus enim vitae maximus. Proin tincidunt, mi vel maximus cursus, tortor dui dignissim dolor, vel euismod quam erat id velit. In faucibus ultrices interdum. Duis eget ipsum pharetra, convallis erat vel, fringilla risus. Nullam aliquam cursus semper. Praesent tristique nisl non fermentum gravida. Phasellus condimentum, ante non molestie tempus, enim magna consectetur tortor, molestie lobortis ante turpis sit amet orci. Aenean ultricies cursus dui eget pharetra. Morbi sapien lectus, congue eget lectus eget, scelerisque fermentum ligula. Sed mattis arcu sed neque porttitor varius. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Maecenas varius elit at auctor aliquam. Integer vitae laoreet ex.
-
-Aliquam facilisis sit amet nisl vitae pellentesque. Vestibulum facilisis lectus vel nibh aliquam lobortis. Suspendisse tempor tortor vitae odio facilisis maximus vel at risus. Aliquam venenatis eleifend elit, convallis pharetra metus rhoncus at. Suspendisse tincidunt ultrices eros vitae tristique. Donec ut magna orci. Pellentesque id dignissim enim, nec volutpat odio. Nunc fringilla auctor leo, et sagittis nisi cursus eu. Quisque et convallis dolor. Nam tristique lectus nec tempus condimentum. Nulla rhoncus quis diam et feugiat.
-
-Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed egestas nisl in justo sagittis scelerisque. Fusce ullamcorper ipsum odio, elementum efficitur velit fringilla quis. Sed a leo ornare, pellentesque justo nec, vestibulum nibh. Aenean tempus nibh eu elit viverra, ac molestie elit scelerisque. Cras auctor laoreet suscipit. Pellentesque a consectetur justo, ut rhoncus mauris. Fusce ut ipsum et magna luctus aliquet. Mauris eleifend accumsan arcu eget feugiat.
-
-Proin fermentum ipsum in tristique dapibus. Integer odio metus, malesuada eu mauris nec, ullamcorper tempor mauris. Nam at massa quam. Mauris in semper dui, at ultrices libero. Nulla vel elit sed mauris tincidunt tempor. Sed at nibh ligula. Aliquam fermentum odio nec hendrerit luctus. Duis metus urna, efficitur in auctor ac, hendrerit eget lorem. Pellentesque sed lorem at arcu mollis varius nec a enim. Aenean auctor turpis id pretium malesuada. Nunc ipsum metus, rhoncus at ornare sit amet, mattis sed dolor.
-
-Maecenas nec quam sed augue pretium sollicitudin a ac metus. Etiam est turpis, imperdiet at ante nec, iaculis pellentesque risus. Nulla id maximus urna. Ut feugiat, lorem in bibendum viverra, tortor felis sollicitudin mauris, vitae iaculis dui ipsum a neque. Quisque in leo vitae orci blandit ullamcorper. Morbi non dolor in mauris ullamcorper tempus sed in justo. Nullam est nisi, porttitor vel eros quis, eleifend fermentum urna. In hac habitasse platea dictumst. Nullam tempor pulvinar aliquet. Nam id nunc pharetra, cursus metus eget, pharetra erat.
-
-Sed blandit venenatis odio sed finibus. Donec quis blandit ipsum. Mauris convallis a dui ut cursus. Vivamus leo nunc, facilisis id aliquam non, commodo et dui. Integer at risus consectetur, feugiat justo rhoncus, posuere est. Mauris condimentum porttitor luctus. Integer lobortis velit non libero facilisis porta.
+            {{post.content}}
         </p>
+
+        <div class="w-full h-auto flex flex-col gap-2">
+            <div class="flex flex-items gap-2">
+                <button>Comments</button>
+            </div>
+            <form action="{% url 'thread_show' post.id %}" method="POST" class="min-h-32 w-full flex items-center">
+
+                {{commentForm.errors}}
+                {{commentForm}}
+
+                {{comment.user.errors}}
+                {{comment.post.errors}}
+                {{comment.reply.errors}}
+
+                {% csrf_token %}
+
+                <button class="btn btn-accent btn-sm">Add</button>
+            </form>
+
+            <div class="flex flex-col gap-2">
+                {% for comment in post_comments %}
+                <div class="flex flex-col gap-2">
+                    <div class="w-full items-center gap-2 flex min-h-16 gap-5">
+                        <div class="flex flex-col justify-center">
+                            <img src="https://robohash.org/{{ comment.user.username }}" alt=""
+                                class="h-12 w-12 object object-center rounded-full">
+                            <p>{{ comment.user.username }}</p>
+                        </div>
+                        <div class="flex flex-col gap-2 w-full h-auto" x-data="{toggle: false}">
+                            <p class="h-full bg-gray-100 rounded-lg w-full p-2 flex flex-col gap-2">
+                                {{ comment.content }}
+                                <span class="text-xs">{{ comment.created_at|timesince }}</span>
+                            <div class="flex justify-start">
+                                <button class="btn btn-xs btn-ghost text-accent"
+                                    @click="toggle = !toggle">Reply</button>
+                            </div>
+                            </p>
+                            <form action="{% url 'reply_comment' comment.id %}" method="post" class="flex items-center"
+                                x-show="toggle">
+                                {% csrf_token %}
+                                {{ commentForm }}
+                                <button class="btn btn-sm btn-accent">Add</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% for reply_comment in comment.comment_set.all|dictsortreversed:"created_at" %}
+                    <div class="ml-8">
+                        <div class="flex flex-col justify-center">
+                            <img src="https://robohash.org/{{ reply_comment.user.username }}" alt=""
+                                class="h-12 w-12 object object-center rounded-full">
+                            <p>{{ reply_comment.user.username }}</p>
+                        </div>
+                        <div class="flex flex-col gap-2 w-full h-auto" x-data="{toggle: false}">
+                            <p class="h-full bg-gray-100 rounded-lg w-full p-2 flex flex-col gap-2">
+                                {{ reply_comment.content }}
+                                <span class="text-xs">{{ reply_comment.created_at|timesince }}</span>
+                            <div class="flex justify-start">
+                                <button class="btn btn-xs btn-ghost text-accent"
+                                    @click="toggle = !toggle">Reply</button>
+                            </div>
+                            </p>
+                            <form action="{% url 'reply_comment' comment.id %}" method="post" class="flex items-center"
+                                x-show="toggle">
+                                {% csrf_token %}
+                                {{ commentForm }}
+                                <button class="btn btn-sm btn-accent">Add</button>
+                            </form>
+
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- Display parent comments -->
+
+        </div>
     </div>
-</div>
-{% endblock content %}
+    {% endblock home_content %}

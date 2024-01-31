@@ -1,52 +1,52 @@
 {% extends 'components/home/base.html' %}
 
-
+{% load user_group %}
 
 
 {% block home_title %}
 
-    groups
+groups
 
 {% endblock home_title %}
 
 
 
 {% block home_content %}
-    
+
 
 <div class="flex min-h-screen max-h-screen overflow-y-auto w-full p-5 flex-col gap-5">
-    
+
     {% for group in groups %}
-        <div class="w-full p-5 flex items-center gap-2 rounded-lg border-2 border-gray-200 justify-between">
-            <div class="flex gap-5">
-                <img src="{{ group.image.url }}" alt="" srcset="" class="h-16 w-16 object object-cover">
-                <div class="flex flex-col">
-                    <h1 class="text-2xl font-bold capitalize text-black">
-                        {{group.name}}
-                    </h1>
-                    <p class="text-xs text-gray-400">
-                        {{group.description}}
-                    </p>
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                
-                {% if not group.owner.id == request.user.id %}
-                <a href="http://" class="btn btn-xs bg-orange-500 border-none text-white">
-                    Join
-                </a>
-                {% else %} 
-                    <a href="{% url 'group_show' group.id %}" class="btn btn-xs bg-orange-500 border-none text-white" >
-                        view
-                    </a>    
-                {% endif %}
-                    
-               
+    <div class="w-full p-5 flex items-center gap-2 rounded-lg border-2 border-gray-200 justify-between">
+        <div class="flex gap-5">
+            <img src="{{ group.image.url }}" alt="" srcset="" class="h-16 w-16 object object-cover">
+            <div class="flex flex-col">
+                <h1 class="text-2xl font-bold capitalize text-black">
+                    {{group.name}}
+                </h1>
+                <p class="text-xs text-gray-400">
+                    {{group.description}}
+                </p>
             </div>
         </div>
+        <div class="flex items-center gap-2">
+            {% if request.user|owner_group:group %}
+            <a href="{% url 'group_show' group.id %}" class="btn btn-xs bg-orange-500 border-none text-white">
+                view
+            </a>
+            {% elif request.user|user_in_group:group %}
+            <a href="{% url 'group_show' group.id %}" class="btn btn-xs bg-orange-500 border-none text-white">
+                view
+            </a>
+            {% else %}
+            <a href="{% url 'join_group' group.id %}" class="btn btn-xs bg-orange-500 border-none text-white">
+                Join
+            </a>
+            {% endif %}
+        </div>
+    </div>
     {% endfor %}
-        
+
 </div>
 
 {% endblock home_content %}
-    

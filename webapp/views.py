@@ -11,11 +11,13 @@ from .decorators import *
 
 def home(request):
 
-    groups = Group.objects.order_by('created_at')    
+    groups = Group.objects.order_by('created_at')
+    posts = Post.objects.order_by('-created_at')    
 
     context = {
         'groupForm' : GroupForm(initial={'user': request.user}),
-        'groups' : groups
+        'groups' : groups,
+        'posts' : posts
     }
     
     return render(request, 'home.html', context)
@@ -23,8 +25,7 @@ def home(request):
 def about(request):
     return render(request, 'pages/about.html')
 
-def thread_show(request, thread):
-    return render(request, 'pages/threads/show.html')
+
 
 
 def sign_in(request):
@@ -40,14 +41,28 @@ def sign_in(request):
             return redirect(to='home')
         return redirect(to='login')
         
-     
-    
     context = {
         'loginForm' : LoginForm
     }
     
-    
     return render(request, 'pages/login.html', context)
+
+
+def sign_up(request):
+    registerForm = RegistrationForm
+    
+    if request.method == 'POST':
+        registerForm = RegistrationForm(request.POST)
+        if registerForm.is_valid():
+            registerForm.save()
+            return redirect(to="home")
+        else:
+            registerForm = RegistrationForm
+    
+    context = {
+        'registerForm' : registerForm
+    }
+    return render(request, 'pages/register.html', context)
 
 @login_required(login_url='login')
 def add_group(request):
@@ -99,6 +114,53 @@ def group_show(request, groupID):
         return render(request, 'pages/groups/show.html', context)
     
     return render(request, 'pages/groups/show.html', context)
+
+@login_required(login_url='login')
+@user_not_in_group
+def join_group(request, groupID):
+    group = Group.objects.get(id=groupID)
+    group.users.add(request.user)
+    group.save()
+    return redirect(to="group_show", groupID=group.id)
+
+
+
+@login_required(login_url='login')
+def thread_show(request, postID):
+    post = Post.objects.get(id=postID)
+    post_comments = Comment.objects.filter(post=post, reply__isnull=True).order_by('-created_at')
+
+    commentForm = CommentForm(initial={'user' : request.user, 'post' : post})    
+    if request.method == 'POST':
+        commentForm = CommentForm(request.POST, initial={'user' : request.user, 'post' : post})
+        if commentForm.is_valid():
+            commentForm.save()
+            return redirect(to="thread_show", postID=post.id)
+    
+    context = {
+        'post' : post,
+        'commentForm' : commentForm,
+        'post_comments' : post_comments
+    }
+    return render(request, 'pages/threads/show.html', context)
+
+@login_required(login_url="login")
+def reply_comment(request, commentID):
+    parent_comment = Comment.objects.get(id=commentID)
+
+    if request.method == 'POST':
+        reply_form = CommentForm(request.POST)
+        if reply_form.is_valid():
+            reply_comment = reply_form.save(commit=False)
+            reply_comment.user = request.user
+            reply_comment.post = parent_comment.post
+            reply_comment.reply = parent_comment  # Associate the reply with the parent comment
+            reply_comment.save()
+
+            return redirect('thread_show', postID=parent_comment.post.id)
+
+    return redirect('thread_show', postID=parent_comment.post.id)
+    
 
 @login_required(login_url='login')
 def sign_out(request):
