@@ -11,9 +11,16 @@
         
         {% if request.user.is_authenticated %}
         
-        <a href="{% url 'logout' %}">
-            <button class="py-1 px-2 text-sm rounded-lg bg-orange-600 hover:bg-orange-700 text-white hover:font-bold duration-700 capitalize">Logout</button>
-        </a>
+        <div class="flex items-center gap-2">
+            <div class="flex items-center">
+                <img src="https://robohash.org/{{request.user.username}}" class="h-12 w-12 rounded-full object object-center"/>
+                <p>{{request.user.username}}</p>
+            </div>
+            <a href="{% url 'logout' %}">
+                <button class="py-1 px-2 text-sm rounded-lg bg-orange-600 hover:bg-orange-700 text-white hover:font-bold duration-700 capitalize">Logout</button>
+            </a>
+        </div>
+      
 
         {% else %}
 
