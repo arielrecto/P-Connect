@@ -18,7 +18,9 @@ urlpatterns = [
     path("threads/", include([
         path("show/<str:postID>", views.thread_show, name="thread_show"),
         path("comment/", include([
-            path('reply<int:commentID>', views.reply_comment, name="reply_comment")
+            path('reply<int:commentID>', views.reply_comment, name="reply_comment"),
+            path('edit/<int:commentID>', views.comment_edit, name="comment_edit"),
+            path('delete/<int:commentID>', views.comment_delete, name="comment_delete")
         ]))
     ])),
 ]

@@ -66,15 +66,31 @@ Thread {{ post.title }}
                                 class="h-12 w-12 object object-center rounded-full">
                             <p>{{ comment.user.username }}</p>
                         </div>
-                        <div class="flex flex-col gap-2 w-full h-auto" x-data="{toggle: false}">
+                        <div class="flex flex-col gap-2 w-full h-auto" x-data="{toggle: false, editToggle : false}">
                             <p class="h-full bg-gray-100 rounded-lg w-full p-2 flex flex-col gap-2">
                                 {{ comment.content }}
                                 <span class="text-xs">{{ comment.created_at|timesince }}</span>
                             <div class="flex justify-start">
                                 <button class="btn btn-xs btn-ghost text-accent"
-                                    @click="toggle = !toggle">Reply</button>
+                                    @click="() => {toggle = !toggle; editToggle = false}">Reply</button>
+
+
+                                {% if request.user.id == comment.user.id %}
+                                <button class="btn btn-xs btn-ghost text-primary"
+                                    @click="() => {editToggle = !editToggle; toggle = false}">Edit</button>
+                                <a href="{% url 'comment_delete' comment.id %}"
+                                    class="btn btn-xs btn-ghost text-error">Delete</a>
+                                {% endif %}
+
+
                             </div>
                             </p>
+                            <form action="{% url 'comment_edit' comment.id %}" method="post" class="flex items-center"
+                                x-show="editToggle">
+                                {% csrf_token %}
+                                {{ commentForm }}
+                                <button class="btn btn-sm btn-accent">save</button>
+                            </form>
                             <form action="{% url 'reply_comment' comment.id %}" method="post" class="flex items-center"
                                 x-show="toggle">
                                 {% csrf_token %}
@@ -90,13 +106,25 @@ Thread {{ post.title }}
                                 class="h-12 w-12 object object-center rounded-full">
                             <p>{{ reply_comment.user.username }}</p>
                         </div>
-                        <div class="flex flex-col gap-2 w-full h-auto" x-data="{toggle: false}">
+                        <div class="flex flex-col gap-2 w-full h-auto" x-data="{toggle: false, editToggle : false}">
                             <p class="h-full bg-gray-100 rounded-lg w-full p-2 flex flex-col gap-2">
                                 {{ reply_comment.content }}
                                 <span class="text-xs">{{ reply_comment.created_at|timesince }}</span>
                             <div class="flex justify-start">
                                 <button class="btn btn-xs btn-ghost text-accent"
-                                    @click="toggle = !toggle">Reply</button>
+                                    @click="() => {toggle = !toggle; editToggle = false}">Reply</button>
+
+                                {% if request.user.id == reply_comment.user.id %}
+
+
+                                <button class="btn btn-xs btn-ghost text-primary"
+                                    @click="() => {editToggle = !editToggle; toggle = false}">Edit</button>
+
+                                <a href="{% url 'comment_delete' reply_comment.id %}"
+                                    class="btn btn-xs btn-ghost text-error">Delete</a>
+                                {% endif %}
+
+
                             </div>
                             </p>
                             <form action="{% url 'reply_comment' comment.id %}" method="post" class="flex items-center"
@@ -104,6 +132,13 @@ Thread {{ post.title }}
                                 {% csrf_token %}
                                 {{ commentForm }}
                                 <button class="btn btn-sm btn-accent">Add</button>
+                            </form>
+
+                            <form action="{% url 'comment_edit' comment.id %}" method="post" class="flex items-center"
+                                x-show="editToggle">
+                                {% csrf_token %}
+                                {{ commentForm }}
+                                <button class="btn btn-sm btn-accent">save</button>
                             </form>
 
                         </div>

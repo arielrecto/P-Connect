@@ -167,6 +167,20 @@ def thread_show(request, postID):
     }
     return render(request, 'pages/threads/show.html', context)
 
+
+@login_required(login_url='login')
+def comment_edit(request, commentID):
+    comment = Comment.objects.get(id=commentID)
+    commentForm = CommentForm(request.POST, instance=comment)
+    commentForm.save()
+    return redirect(to="thread_show", postID=comment.post.id)
+
+@login_required(login_url='login')
+def comment_delete(request, commentID):
+    comment = Comment.objects.get(id=commentID)
+    comment.delete()
+    return redirect(to="thread_show", postID=comment.post.id)
+
 @login_required(login_url="login")
 def reply_comment(request, commentID):
     parent_comment = Comment.objects.get(id=commentID)
