@@ -4,7 +4,7 @@
 
 
 {% block home_title %}
-    Group {{group.name}}
+    Thread {{post.title}}
 {% endblock home_title %}
     
 
@@ -15,10 +15,10 @@
     <div class="flex items-center justify-center">
         <form action="" method="post" class="flex flex-col gap-2 bg-white rounded-lg p-5 w-1/2" enctype="multipart/form-data">
             <h1 class="text-3xl font-bold text-orange-500">
-                Edit Group
+                Edit Thread
             </h1>
             {% csrf_token %}
-            {{groupForm}}
+            {{postForm}}
             <button class="btn btn-accent">Submit</button>
         </form>
     </div>

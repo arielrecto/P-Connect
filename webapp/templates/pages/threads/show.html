@@ -21,7 +21,10 @@ Thread {{ post.title }}
                     </a> ({{post.user.username}})
                     - {{post.created_at|timesince}}</span>
             </h1>
-
+            <div>
+                <a href="{% url 'thread_edit' post.id %}" class="btn btn-ghost btn-xs text-accent">Edit</a>
+                <a href="{% url 'thread_delete' post.id %}" class="btn btn-ghost btn-xs text-error">Delete</a>
+            </div>
         </div>
 
         <h1 class="text-3xl font-bold gap-2 py-2 truncate">{{post.title}}</h1>
@@ -123,8 +126,6 @@ Thread {{ post.title }}
                                 <a href="{% url 'comment_delete' reply_comment.id %}"
                                     class="btn btn-xs btn-ghost text-error">Delete</a>
                                 {% endif %}
-
-
                             </div>
                             </p>
                             <form action="{% url 'reply_comment' comment.id %}" method="post" class="flex items-center"

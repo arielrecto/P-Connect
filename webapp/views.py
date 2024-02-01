@@ -168,6 +168,32 @@ def thread_show(request, postID):
     return render(request, 'pages/threads/show.html', context)
 
 
+def thread_delete(request, postID):
+    post = Post.objects.get(id=postID)
+    post.delete()
+    return redirect(to="group_show", groupID=post.group.id)
+
+
+@login_required(login_url='login')
+def thread_edit(request, postID):
+    post = Post.objects.get(id=postID)
+    postForm  = PostForm(instance=post)
+
+    if request.method == 'POST':
+        postForm = PostForm(request.POST, request.FILES, instance=post)
+        if postForm.is_valid():
+            postForm.save()
+            return redirect(to="thread_show", postID=post.id)
+        
+    context = {
+        'post' : post,
+        'postForm' : postForm
+    }
+    
+    
+    return render(request, 'pages/threads/edit.html', context)
+
+
 @login_required(login_url='login')
 def comment_edit(request, commentID):
     comment = Comment.objects.get(id=commentID)
