@@ -33,12 +33,29 @@ def user_not_in_group(view_func):
         if user.is_authenticated:
             group = Group.objects.get(id=group_id)
 
-            # Check if the user is already in the group
+           
             if user in group.users.all():
-                # User is already in the group, redirect back or return a response
+              
                 return redirect('group_index')
 
-        # User is not in the group, proceed with the view
+      
         return view_func(request, *args, **kwargs)
 
+    return wrapper
+
+
+
+def group_owner(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        group_id = kwargs.get('groupID')
+        group = Group.objects.get(id=group_id)
+        user = request.user
+        
+        
+        if user.id == group.owner.id:
+            return view_func(request, *args, **kwargs)
+        
+        return redirect(to="group_show", groupID=group.id)
+    
     return wrapper

@@ -1,0 +1,26 @@
+{% extends 'components\home\base.html' %}
+
+
+
+
+{% block home_title %}
+    Group {{group.name}}
+{% endblock home_title %}
+    
+
+
+
+
+{% block home_content %}
+    <div class="flex items-center justify-center">
+        <form action="" method="post" class="flex flex-col gap-2 bg-white rounded-lg p-5 w-1/2">
+            <h1 class="text-3xl font-bold text-orange-500">
+                Edit Group
+            </h1>
+            {% csrf_token %}
+            {{groupForm}}
+            <button class="btn btn-accent">Submit</button>
+        </form>
+    </div>
+{% endblock home_content %}
+    

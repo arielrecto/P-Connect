@@ -12,6 +12,8 @@ urlpatterns = [
         path('', views.group_index, name="group_index"),
         path('show/<int:groupID>', views.group_show , name="group_show"),
         path('join/<int:groupID>', views.join_group, name="join_group"),
+        path('edit/<int:groupID>', views.group_edit, name="group_edit"),
+        path('delete/<int:groupID>', views.group_delete, name="group_delete")
     ])),
     path("threads/", include([
         path("show/<str:postID>", views.thread_show, name="thread_show"),

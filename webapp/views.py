@@ -87,31 +87,28 @@ def group_show(request, groupID):
     group = Group.objects.get(id=groupID)
     posts = Post.objects.filter(group=group).order_by('-created_at')
     
-
-    
     postForm = PostForm(initial={
         'user' : request.user,
         'group' : group
     })
+    
+    if request.method == 'POST':
+        postForm = PostForm(request.POST, request.FILES)
+        if postForm.is_valid():
+            print('hello')
+            postForm.save()
+            return redirect(to="group_show", groupID=group.id)
+        else:
+            postForm = PostForm(initial={
+                    'user' : request.user,
+                    'group' : group
+                    })
+    
     context = {
         'group' : group,
         'postForm': postForm,
         'posts' : posts
     }
-    
-    if request.method == 'POST':
-        postForm = PostForm(request.POST, request.FILES)
-        if postForm.is_valid():
-            postForm.save()
-            return redirect(to="group_show", groupID=group.id)
-        
-        context = {
-        'group' : group,
-        'postForm': postForm,
-        'posts' : posts
-        }
-    
-        return render(request, 'pages/groups/show.html', context)
     
     return render(request, 'pages/groups/show.html', context)
 
@@ -122,6 +119,32 @@ def join_group(request, groupID):
     group.users.add(request.user)
     group.save()
     return redirect(to="group_show", groupID=group.id)
+
+
+@login_required(login_url='login')
+@group_owner
+def group_edit(request, groupID):
+    group = Group.objects.get(id=groupID)
+    groupForm = GroupForm(instance=group)
+    
+    if request.method == 'POST':
+        groupForm = GroupForm(request.POST, request.FILES, instance=group)
+        if groupForm.is_valid():
+            groupForm.save()
+            return redirect(to='group_show', groupID=group.id)
+    
+    context = {
+        'group' : group,
+        'groupForm' : groupForm
+    }
+    return render(request, 'pages/groups/edit.html', context)
+
+@login_required(login_url='login')
+@group_owner
+def group_delete(request, groupID):
+    group = Group.objects.get(id=groupID)
+    group.delete()
+    return redirect(to="group_index")
 
 
 

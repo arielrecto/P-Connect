@@ -12,10 +12,22 @@ Group {{ group.name}}
 
 {% block home_content %}
 <div class="flex flex-col gap-2 min-h-screen w-full max-h-auto">
-    <div class="p-5 flex items-center w-full border-b border-gray-300">
+    <div class="p-5 flex items-center w-full border-b border-gray-300 justify-between">
         <h1 class="text-3xl font-bold text-orange-500">
             p/{{group.name}}
         </h1>
+
+
+        {% if request.user.id == group.owner.id %}
+        <div class="flex items-center gap-2">
+            <a href="{% url 'group_edit' group.id %}" class="btn btn-xs bg-orange-500 hover:bg-orange-400 border-none text-white">Edit</a>
+            <a href="{% url 'group_delete' group.id %}" class="btn btn-error btn-xs ">Delete</a>
+        </div>
+
+
+        {% endif %}
+
+
     </div>
     <div class="flex gap-5 items-center h-auto">
         <div class="flex flex-col gap-2 p-5 items-center">
